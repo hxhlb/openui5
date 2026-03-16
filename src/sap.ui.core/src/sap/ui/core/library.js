@@ -157,6 +157,7 @@ sap.ui.define([
 			 "sap.ui.core.InvisibleMessage"
 		 ],
 		 extensions: {
+			"sap.ui.debug": true,
 			 "sap.ui.support" : {
 				 diagnosticPlugins: [
 					 "sap/ui/core/support/plugins/TechInfo",

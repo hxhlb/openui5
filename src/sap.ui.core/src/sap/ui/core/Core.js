@@ -662,6 +662,12 @@ sap.ui.define([
 				}
 			})();
 
+			// loading debug tools if configured via configuration (URL parameter)
+			const debugLoader = "sap/ui/core/support/debug/DebugLoader";
+			if (Supportability.isDebugToolsEnabled()) {
+				this.aModules.unshift(debugLoader);
+			}
+
 			/**
 			 * @deprecated
 			 */
