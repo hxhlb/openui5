@@ -85,6 +85,7 @@ sap.ui.define([
 				getModelInterface : mustBeMocked,
 				getServiceUrl : function () { return "/~/"; },
 				getUnlockedAutoCopy : mustBeMocked,
+				lockGroup : mustBeMocked,
 				request : mustBeMocked
 			};
 
@@ -6979,8 +6980,9 @@ sap.ui.define([
 				mock();
 				return Promise.resolve();
 			});
-		this.mock(oCache).expects("readCount").exactly(bGroupLock ? 1 : 0)
-			.withExactArgs("~oGroupLock~").resolves("n/a");
+		this.mock(this.oRequestor).expects("lockGroup").exactly(bGroupLock ? 0 : 1)
+			.withExactArgs("$auto", oCache).returns("~oGroupLock~");
+		this.mock(oCache).expects("readCount").withExactArgs("~oGroupLock~").resolves("n/a");
 		this.mock(oCache).expects("readGrandTotal").exactly(bGroupLock ? 1 : 0)
 			.withExactArgs("~oGroupLock~").resolves("n/a");
 
@@ -6988,7 +6990,7 @@ sap.ui.define([
 		const oDeletePromise = oCache._delete(bGroupLock ? "~oGroupLock~" : null, "~editUrl~", "2",
 			"n/a", fnCallback);
 
-		assert.strictEqual(oDeletePromise.isPending(), bGroupLock, "a SyncPromise");
+		assert.ok(oDeletePromise.isPending(), "a SyncPromise");
 
 		return oDeletePromise.then(function () {
 			assert.strictEqual(fnCallback.callCount, 1);

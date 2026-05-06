@@ -127,7 +127,9 @@ sap.ui.define([
 			this.oRequestor.request("DELETE", sEditUrl, oGroupLock, {"If-Match" : oElement}),
 			this.readCount(oGroupLock),
 			this.readGrandTotal(oGroupLock)
-		] : []).then(() => {
+		] : [
+			this.readCount(this.oRequestor.lockGroup("$auto", this))
+		]).then(() => {
 			this.oTreeState.delete(oElement);
 			if (this.aElements.length === 0) {
 				return; // concurrent side-effects refresh takes care of cleanup
