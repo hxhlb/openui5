@@ -307,4 +307,4 @@ sap.ui.define([
 	};
 
 	return MetadataPropagationUtil;
-}, /* bExport= */true);
+});

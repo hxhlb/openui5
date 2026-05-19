@@ -99,4 +99,4 @@ sap.ui.define([
 	};
 
 	return AddIFrame;
-}, /* bExport= */true);
+});

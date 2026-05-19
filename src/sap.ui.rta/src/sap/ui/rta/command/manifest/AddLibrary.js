@@ -49,4 +49,4 @@ sap.ui.define([
 	};
 
 	return AddLibrary;
-}, /* bExport= */true);
+});

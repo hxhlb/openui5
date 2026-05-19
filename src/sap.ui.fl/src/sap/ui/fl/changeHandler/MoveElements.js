@@ -136,5 +136,4 @@ sap.ui.define([], function() {
 	};
 
 	return MoveElements;
-},
-/* bExport= */true);
+});
