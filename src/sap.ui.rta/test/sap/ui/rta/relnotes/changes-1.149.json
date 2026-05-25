@@ -6,11 +6,6 @@
         "id": "15e545427cae9ec55f23b2f062edcec80fdc3d38",
         "type": "FEATURE",
         "text": " sap.uxap.ObjectPageSection: Add \"Add IFrame\" action for subsections in RTA"
-      },
-      {
-        "id": "0a4c31a52478f7db3a47196ebf0d731be650d7e5",
-        "type": "FIX",
-        "text": " sap.uxap.ObjectPageSection: Enable rename in RTA"
       }
     ]
   }

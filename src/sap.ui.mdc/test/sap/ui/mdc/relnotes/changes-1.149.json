@@ -3,6 +3,31 @@
     "date": "May 2026",
     "notes": [
       {
+        "id": "68001fc63d549aafc2cf3bc94461d36a84aacefb",
+        "type": "FIX",
+        "text": "mdc.FilterBar: fix wrapping issue"
+      },
+      {
+        "id": "c3c2c3b79ca4ef8eacd7dc1cf3690e1661f6db9e",
+        "type": "FIX",
+        "text": "p13n.AdaptFiltersPanel: fix view announcement"
+      },
+      {
+        "id": "1d03d7de36caff01c484aba60e647a91d43860c9",
+        "type": "FIX",
+        "text": " valuehelp.FilterBar: Deemphasize Go-button"
+      },
+      {
+        "id": "64c7ab87dee125b2d69242e7f78734c25df2ffdc",
+        "type": "FIX",
+        "text": "p13n.AdaptFiltersPanel: fix tooltip of sort action"
+      },
+      {
+        "id": "c3be861803ee3b7622519fcd7a36eb40af5acca7",
+        "type": "FIX",
+        "text": " AdaptFiltersPanel: Fix id"
+      },
+      {
         "id": "c06a9ae2592194e1581a0f16a998c7f5aa93e7a9",
         "type": "FIX",
         "text": " p13n.AdaptFiltersPanel: Fix label wrapping at 320px"
