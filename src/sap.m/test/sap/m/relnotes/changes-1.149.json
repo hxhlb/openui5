@@ -3,6 +3,11 @@
     "date": "May 2026",
     "notes": [
       {
+        "id": "ac7f9534ea4a001d0ae1302d8ab71fe568723fcc",
+        "type": "FIX",
+        "text": " sap.m.Bar: Restore selector specificity"
+      },
+      {
         "id": "5978aca2bbc097d80f1c85bca91b1a6a0f8d5230",
         "type": "FIX",
         "text": " sap.m.PullToRefresh: Improve sample"
@@ -13,9 +18,19 @@
         "text": " We've now fixed an issue where the image on the slide tile was disappearing on browser window resize"
       },
       {
+        "id": "db1a62392f012e5169aff21e9564f764addf29b2",
+        "type": "FIX",
+        "text": " sap.m.Avatar: prevent focus outline clipping in overflow containers"
+      },
+      {
         "id": "f4c095cd4a3eeadaec0d91a9bd393fc9bbaa2c35",
         "type": "FIX",
         "text": " sap.m.StandardDynamicDateOption: Fix default value for TODAYFROMTO operator"
+      },
+      {
+        "id": "bea32c7b0512ce22ba1b06cf181b73f54da23d29",
+        "type": "FIX",
+        "text": " sap.m.ScrollEnablement: fix unstable test"
       },
       {
         "id": "e6ca51158b0020cda81908c5be28a36bcc5957b7",
@@ -31,6 +46,11 @@
         "id": "08d38c281b22631510b78f6f03c7d60c4505d9eb",
         "type": "FIX",
         "text": " m.Table: avoid scroll jump when focus is forwarded on mouse click"
+      },
+      {
+        "id": "4409215e47c3774af60a3706f9df62c9ff992062",
+        "type": "FEATURE",
+        "text": " sap.m.Panel: Arrow icon is now animated"
       },
       {
         "id": "da0dd11972380ae7387d9aee6f56ace9281bf154",

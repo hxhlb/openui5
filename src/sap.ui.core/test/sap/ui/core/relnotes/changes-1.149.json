@@ -3,6 +3,11 @@
     "date": "May 2026",
     "notes": [
       {
+        "id": "abcf5cc304fbf80acf435b07fc8b99daef8d7e6f",
+        "type": "FIX",
+        "text": " sap.ui.test: fix iFrameLogging cascade on OPA timeout"
+      },
+      {
         "id": "06d63bf382fce732866d86b21682f903fa513d16",
         "type": "FIX",
         "text": " sap.ui.test.autowaiter._timeoutWaiter: Guard log construction with level check"

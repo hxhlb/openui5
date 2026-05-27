@@ -3,6 +3,16 @@
     "date": "May 2026",
     "notes": [
       {
+        "id": "3aeaf68034ee555245df5ce1c5567c13355f0e9c",
+        "type": "FIX",
+        "text": " MultiValueField: only 10 tokens shown if \"more\" pressed"
+      },
+      {
+        "id": "1abfe2d05a551aca5d58ce65d7db9284e68b37c6",
+        "type": "FEATURE",
+        "text": " FilterBar: new Operator for default values added"
+      },
+      {
         "id": "68001fc63d549aafc2cf3bc94461d36a84aacefb",
         "type": "FIX",
         "text": "mdc.FilterBar: fix wrapping issue"
