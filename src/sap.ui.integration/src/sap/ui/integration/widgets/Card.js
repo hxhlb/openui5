@@ -1246,6 +1246,9 @@ sap.ui.define([
 			vValue;
 
 		for (sKey in oManifestParams) {
+			if (oManifestParams[sKey].ignoreBinding === true) {
+				continue;
+			}
 			vValue = oManifestParams[sKey].value;
 			if (typeof vValue === "string" && vValue.indexOf("{context>") !== -1) {
 				return true;
@@ -1269,6 +1272,9 @@ sap.ui.define([
 			vValue;
 
 		for (sKey in oManifestParams) {
+			if (oManifestParams[sKey].ignoreBinding === true) {
+				continue;
+			}
 			vValue = oManifestParams[sKey].value;
 			if (typeof vValue === "string" && vValue.indexOf("{context>") !== -1) {
 				oContextParams[sKey] = vValue;
