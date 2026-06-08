@@ -41,6 +41,7 @@ sap.ui.define([
 	 *   Whether a grand total is needed
 	 * @param {sap.ui.model.odata.v4.lib._CollectionCache} [oFirstLevel]
 	 *   An optional collection cache to be used as this aggregation cache's first (and only) level
+	 * @throws {Error} If the given collection cache has pending POSTs
 	 *
 	 * @alias sap.ui.model.odata.v4.lib._AggregationCache
 	 * @borrows sap.ui.model.odata.v4.lib._CollectionCache#addKeptElement as #addKeptElement
@@ -72,6 +73,9 @@ sap.ui.define([
 		if (oFirstLevel) {
 			this.mChangeRequests = oFirstLevel.mChangeRequests;
 			this.mEditUrl2PatchPromise = oFirstLevel.mEditUrl2PatchPromise;
+			if (!_Helper.isEmptyObject(oFirstLevel.mPostRequests)) {
+				throw new Error("Not allowed due to pending POSTs");
+			}
 		}
 	}
 

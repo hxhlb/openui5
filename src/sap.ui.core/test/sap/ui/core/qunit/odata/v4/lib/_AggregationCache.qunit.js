@@ -394,6 +394,23 @@ sap.ui.define([
 	});
 
 	//*********************************************************************************************
+	QUnit.test("create: pending POSTs w/ oFirstLevel", function (assert) {
+		const oFirstLevel = {
+			mPostRequests : "~mPostRequests~",
+			setQueryOptions : () => {} // don't care
+		};
+		this.mock(_Cache.prototype).expects("getDownloadUrl").withExactArgs("")
+			.returns("~sDownloadUrl~"); // avoid call to isEmptyObject()
+		this.mock(_Helper).expects("isEmptyObject").withExactArgs("~mPostRequests~").returns(false);
+
+		assert.throws(function () {
+			// code under test
+			_AggregationCache.create(this.oRequestor, "resource/path", "~n/a~", {},
+				{hierarchyQualifier : "X"}, false, false, false, oFirstLevel);
+		}, new Error("Not allowed due to pending POSTs"));
+	});
+
+	//*********************************************************************************************
 [{ // grand total
 	aggregate : {
 		SalesNumber : {grandTotal : true}
