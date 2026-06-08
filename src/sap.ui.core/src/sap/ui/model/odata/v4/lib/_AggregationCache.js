@@ -2740,7 +2740,7 @@ sap.ui.define([
 		const oGrandTotal = this.aElements.$byPredicate["()"];
 		if (oGrandTotal) {
 			fnUpdate(oGrandTotal);
-		} else if (bOutdated) {
+		} else {
 			// the grand total is not yet added to this.aElements.$byPredicate when the grand total
 			// Promise resolves, so update the grand total object itself; multiple concurrent calls
 			// produce the expected result, that means if bOutdated is true at least once, the grand

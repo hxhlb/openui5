@@ -4666,17 +4666,6 @@ sap.ui.define([
 	});
 
 	//*********************************************************************************************
-	QUnit.test("setGrandTotalOutdated: with grand total Promise, but bOutdated=false", function () {
-		const oCache = _AggregationCache.create(this.oRequestor, "Foo", "", {},
-			{hierarchyQualifier : "X"});
-		oCache.oGrandTotalPromise = {then : mustBeMocked};
-		this.mock(_Helper).expects("updateAll").never();
-
-		// code under test
-		oCache.setGrandTotalOutdated(false);
-	});
-
-	//*********************************************************************************************
 [false, true].forEach((bWithCopy) => {
 	QUnit.test("setGrandTotalOutdated: wait for grand total, with copy=" + bWithCopy, function () {
 		const oCache = _AggregationCache.create(this.oRequestor, "Foo", "", {}, {
@@ -4690,7 +4679,7 @@ sap.ui.define([
 		const oHelperMock = this.mock(_Helper);
 		oHelperMock.expects("updateAll")
 			.withExactArgs(sinon.match.same(oCache.mChangeListeners), "()", "~oGrandTotal~",
-				{"@$ui5.context.isOutdated" : true});
+				{"@$ui5.context.isOutdated" : "~bOutdated~"});
 		oHelperMock.expects("getPrivateAnnotation").withExactArgs("~oGrandTotal~", "copy")
 			.returns(bWithCopy ? "~oGrandTotalCopy~" : undefined);
 		oHelperMock.expects("getPrivateAnnotation").exactly(bWithCopy ? 1 : 0)
@@ -4698,10 +4687,10 @@ sap.ui.define([
 			.returns("~sPredicateGrandTotalCopy~");
 		oHelperMock.expects("updateAll").exactly(bWithCopy ? 1 : 0)
 			.withExactArgs(sinon.match.same(oCache.mChangeListeners), "~sPredicateGrandTotalCopy~",
-				"~oGrandTotalCopy~", {"@$ui5.context.isOutdated" : true});
+				"~oGrandTotalCopy~", {"@$ui5.context.isOutdated" : "~bOutdated~"});
 
 		// code under test
-		oCache.setGrandTotalOutdated(true);
+		oCache.setGrandTotalOutdated("~bOutdated~");
 
 		return oCache.oGrandTotalPromise;
 	});
