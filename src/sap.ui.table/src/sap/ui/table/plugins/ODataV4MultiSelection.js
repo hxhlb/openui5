@@ -129,8 +129,6 @@ sap.ui.define([
 
 		TableUtils.Hook.register(oTable, TableUtils.Hook.Keys.Table.RowsBound, onTableRowsBound, this);
 		TableUtils.Hook.register(oTable, TableUtils.Hook.Keys.Table.TotalRowCountChanged, onTotalRowCountChanged, this);
-		TableUtils.Hook.register(oTable, TableUtils.Hook.Keys.Table.UpdateRows, clearSelectionCache, this);
-		TableUtils.Hook.register(oTable, TableUtils.Hook.Keys.Table.UnbindRows, clearSelectionCache, this);
 		TableUtils.Hook.register(oTable, TableUtils.Hook.Keys.Row.UpdateState, onRowUpdateState, this);
 	};
 
@@ -145,10 +143,7 @@ sap.ui.define([
 		detachFromBinding(this, oTable.getBinding());
 		TableUtils.Hook.deregister(oTable, TableUtils.Hook.Keys.Table.RowsBound, onTableRowsBound, this);
 		TableUtils.Hook.deregister(oTable, TableUtils.Hook.Keys.Table.TotalRowCountChanged, onTotalRowCountChanged, this);
-		TableUtils.Hook.deregister(oTable, TableUtils.Hook.Keys.Table.UpdateRows, clearSelectionCache, this);
-		TableUtils.Hook.register(oTable, TableUtils.Hook.Keys.Table.UnbindRows, clearSelectionCache, this);
 		TableUtils.Hook.deregister(oTable, TableUtils.Hook.Keys.Row.UpdateState, onRowUpdateState, this);
-		clearSelectionCache.call(this);
 	};
 
 	/**
@@ -397,14 +392,12 @@ sap.ui.define([
 	function attachToBinding(oPlugin, oBinding) {
 		attachToHeaderContext(oPlugin, oBinding.getHeaderContext());
 		oBinding.attachChange(onBindingChange, oPlugin);
-		oBinding.attachSelectionChanged(clearSelectionCache, oPlugin);
 	}
 
 	function detachFromBinding(oPlugin, oBinding) {
 		_private(oPlugin).oSelectionCountBinding?.destroy();
 		delete _private(oPlugin).oSelectionCountBinding;
 		oBinding?.detachChange(onBindingChange, oPlugin);
-		oBinding?.detachSelectionChanged(clearSelectionCache, oPlugin);
 	}
 
 	function onBindingChange(oEvent) {
@@ -430,10 +423,6 @@ sap.ui.define([
 			updateHeaderSelector(oPlugin);
 		});
 		mPrivate.oSelectionCountBinding.initialize();
-	}
-
-	function clearSelectionCache() {
-		delete _private(this).aSelectedContexts; // Delete the cached selected contexts to force a recalculation.
 	}
 
 	/**
@@ -549,9 +538,7 @@ sap.ui.define([
 			return [];
 		}
 
-		_private(this).aSelectedContexts ??= this.getControl().getBinding()?.getAllCurrentContexts().filter((oContext) => oContext.isSelected()) ?? [];
-
-		return _private(this).aSelectedContexts;
+		return this.getControl().getBinding()?.getAllCurrentContexts().filter((oContext) => oContext.isSelected()) ?? [];
 	};
 
 	ODataV4MultiSelection.prototype.onThemeChanged = function() {
