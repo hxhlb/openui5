@@ -45,7 +45,7 @@ sap.ui.define(function() {
 				ui5: {
 					// preload sap.m upfront to avoid individual requests for sap/m/Text -> sap/m/library
 					// as those prevent a later preload of sap.m
-					libs: "sap.m"
+					libs: "sap.m, sap.ui.commons"
 				}
 			},
 			SettersContextReturn: {
