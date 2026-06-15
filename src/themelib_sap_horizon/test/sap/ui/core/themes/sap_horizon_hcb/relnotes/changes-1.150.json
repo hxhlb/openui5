@@ -3,6 +3,21 @@
     "date": "June 2026",
     "notes": [
       {
+        "id": "75dc5cbec5325250abc4536291f630382a28f5c2",
+        "type": "FIX",
+        "text": " sap.m.Tokenizer: Underline N-more indicator in HC themes"
+      },
+      {
+        "id": "42e5864d4b9d4d7b5ec427520d3f78e48a01e49d",
+        "type": "FIX",
+        "text": " sap.m.Slider: focus outline added to the editable tooltips"
+      },
+      {
+        "id": "970d37ad5eb996615cfd8236fcbecd376b954332",
+        "type": "FIX",
+        "text": " sap.m.Select: retain active state on arrow when dropdown is open"
+      },
+      {
         "id": "fa2e1be47f566308705f2eca40a50235ee2a7b45",
         "type": "FIX",
         "text": " sap.m.IconTabBar: fix expand icon color overriding styles"

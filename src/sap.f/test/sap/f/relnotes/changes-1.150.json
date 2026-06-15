@@ -3,6 +3,16 @@
     "date": "June 2026",
     "notes": [
       {
+        "id": "d46c042144f5a7c3974baa06b6d8593215a15d27",
+        "type": "FEATURE",
+        "text": " sap.f.CardBase: headingLevel property is now added"
+      },
+      {
+        "id": "fb09ab537ee5f79121df70b70e335361a8f92260",
+        "type": "FIX",
+        "text": " sap.f.DynamicPage: Fix title height measurement in _updateTitlePositioning"
+      },
+      {
         "id": "c742daab020f73e7379f9b18393f02ee1b8cd45c",
         "type": "FIX",
         "text": " sap.m.GridListItem: Missing shadow on selected state added"

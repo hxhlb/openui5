@@ -3,6 +3,16 @@
     "date": "June 2026",
     "notes": [
       {
+        "id": "75dc5cbec5325250abc4536291f630382a28f5c2",
+        "type": "FIX",
+        "text": " sap.m.Tokenizer: Underline N-more indicator in HC themes"
+      },
+      {
+        "id": "42e5864d4b9d4d7b5ec427520d3f78e48a01e49d",
+        "type": "FIX",
+        "text": " sap.m.Slider: focus outline added to the editable tooltips"
+      },
+      {
         "id": "e59480af971122c075f022da79cc92a4c1ac3de0",
         "type": "FIX",
         "text": " sap.m.Select: move close button from header to footer on phone"

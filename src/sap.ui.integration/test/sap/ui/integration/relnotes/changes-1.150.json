@@ -3,6 +3,16 @@
     "date": "June 2026",
     "notes": [
       {
+        "id": "c91fc6a90ed724029fccf3ad28ba38f3560ff4c5",
+        "type": "FIX",
+        "text": " Integration Cards: Adding ignoreBinding param flag and fail-safe for malformed bindings"
+      },
+      {
+        "id": "d46c042144f5a7c3974baa06b6d8593215a15d27",
+        "type": "FEATURE",
+        "text": " sap.f.CardBase: headingLevel property is now added"
+      },
+      {
         "id": "cc42599ee5d027cd9e315fc989fd263f2f87fb9d",
         "type": "FIX",
         "text": " Integration Cards: Manifest Resolver now resolves popin properties"
