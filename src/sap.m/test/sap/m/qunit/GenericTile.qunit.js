@@ -2875,10 +2875,13 @@ sap.ui.define([
 	QUnit.test("ENTER key event in Display scope", function(assert) {
 		//Arrange
 		this.oGenericTile.attachEvent("press", this.ftnPressHandler);
+		var down = jQuery.Event("keydown");
+		down.keyCode = KeyCodes.ENTER;
 		var e = jQuery.Event("keyup");
 		e.keyCode = KeyCodes.ENTER;
 
 		//Act
+		this.oGenericTile.$().trigger(down);
 		this.oGenericTile.$().trigger(e);
 
 		//Assert
@@ -2890,10 +2893,13 @@ sap.ui.define([
 		this.oGenericTile.setScope(GenericTileScope.Actions);
 		await nextUIUpdate();
 		this.oGenericTile.attachEvent("press", this.ftnPressHandler);
+		var down = jQuery.Event("keydown");
+		down.keyCode = KeyCodes.ENTER;
 		var e = jQuery.Event("keyup");
 		e.keyCode = KeyCodes.ENTER;
 
 		//Act
+		this.oGenericTile.$().trigger(down);
 		this.oGenericTile.$().trigger(e);
 
 		//Assert
@@ -2903,10 +2909,13 @@ sap.ui.define([
 	QUnit.test("SPACE key event in Display scope", function(assert) {
 		//Arrange
 		this.oGenericTile.attachEvent("press", this.ftnPressHandler);
+		var down = jQuery.Event("keydown");
+		down.keyCode = KeyCodes.SPACE;
 		var e = jQuery.Event("keyup");
 		e.keyCode = KeyCodes.SPACE;
 
 		//Act
+		this.oGenericTile.$().trigger(down);
 		this.oGenericTile.$().trigger(e);
 
 		//Assert
@@ -2919,10 +2928,13 @@ sap.ui.define([
 		this.oGenericTile.setScope(GenericTileScope.Display);
 		await nextUIUpdate();
 		this.oGenericTile.attachEvent("press", handlePress);
+		var down = jQuery.Event("keydown");
+		down.keyCode = KeyCodes.SPACE;
 		var e = jQuery.Event("keyup");
 		e.keyCode = KeyCodes.SPACE;
 
 		//Act
+		this.oGenericTile.$().trigger(down);
 		this.oGenericTile.$().trigger(e);
 
 		//Assert
@@ -2938,10 +2950,13 @@ sap.ui.define([
 		this.oGenericTile.setScope(GenericTileScope.Actions);
 		await nextUIUpdate();
 		this.oGenericTile.attachEvent("press", this.ftnPressHandler);
+		var down = jQuery.Event("keydown");
+		down.keyCode = KeyCodes.SPACE;
 		var e = jQuery.Event("keyup");
 		e.keyCode = KeyCodes.SPACE;
 
 		//Act
+		this.oGenericTile.$().trigger(down);
 		this.oGenericTile.$().trigger(e);
 
 		//Assert
@@ -2954,10 +2969,13 @@ sap.ui.define([
 		this.oGenericTile.setScope(GenericTileScope.Actions);
 		await nextUIUpdate();
 		this.oGenericTile.attachEvent("press", handlePress);
+		var down = jQuery.Event("keydown");
+		down.keyCode = KeyCodes.SPACE;
 		var e = jQuery.Event("keyup");
 		e.keyCode = KeyCodes.SPACE;
 
 		//Act
+		this.oGenericTile.$().trigger(down);
 		this.oGenericTile.$().trigger(e);
 
 		//Assert
@@ -5352,11 +5370,13 @@ QUnit.test("Check for visibilty of content in header mode in 2*1 tile ", async f
 		if ($Tabbables.length) {
 			$Tabbables.get(!bForward ? $Tabbables.length - 1 : 0).focus();
 		}
+		qutils.triggerKeydown(this.oGenericTile._oMoreIcon.getDomRef(),KeyCodes.ENTER);
 		qutils.triggerKeyup(this.oGenericTile._oMoreIcon.getDomRef(),KeyCodes.ENTER);
 
 		//Assert
 		assert.notOk(bEventNotTriggered, "Press event of GenericTile is getting triggered");
 		//Act
+		qutils.triggerKeydown(this.oGenericTile._oMoreIcon.getDomRef(),KeyCodes.SPACE);
 		qutils.triggerKeyup(this.oGenericTile._oMoreIcon.getDomRef(),KeyCodes.SPACE);
 		//Assert
 		assert.notOk(bEventNotTriggered, "Press event of GenericTile is getting triggered");
