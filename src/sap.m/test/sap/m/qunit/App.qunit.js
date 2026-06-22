@@ -6,8 +6,8 @@ sap.ui.define([
 	"sap/m/Page",
 	"sap/ui/thirdparty/jquery",
 	"sap/ui/Device",
-	"sap/ui/core/Core"
-], function(Element, createAndAppendDiv, App, Page, jQuery, Device, Core) {
+	"sap/ui/qunit/utils/nextUIUpdate"
+], function(Element, createAndAppendDiv, App, Page, jQuery, Device, nextUIUpdate) {
 	"use strict";
 
 	createAndAppendDiv("content");
@@ -16,10 +16,9 @@ sap.ui.define([
 		return oApp.getDomRef("BG");
 	}
 
-	var sBackroungImageSrc  = "test-resources/sap/m/images/SAPLogo.jpg",
+	const sBackroungImageSrc = "test-resources/sap/m/images/SAPLogo.jpg";
 
-
-	app = new App("myFirstApp", {
+	const app = new App("myFirstApp", {
 		initialPage: "page1",
 		homeIcon: "test.png",
 		pages: [
@@ -38,20 +37,20 @@ sap.ui.define([
 
 
 
-	QUnit.test("App rendered", function(assert) {
+	QUnit.test("App is rendered and initial page is displayed", function(assert) {
 		assert.ok(document.getElementById("myFirstApp"), "App should be rendered");
 		assert.ok(document.getElementById("page1"), "Initially the first page should be rendered");
 	});
 
-	QUnit.test("Home Icon Tag", function(assert) {
-		var $hi = jQuery("link").filter("[rel=apple-touch-icon]");
+	QUnit.test("Home icon link tag is created with correct href", function(assert) {
+		const $hi = jQuery("link").filter("[rel=apple-touch-icon]");
 		assert.equal($hi.length, 1, "There should be 1 link tags with the home icons");
 		assert.equal($hi.attr("href"), "test.png", "link tag should point to the home icon");
 	});
 
-	QUnit.test("Viewport Meta Tag", function(assert) {
+	QUnit.test("Viewport meta tag is present with correct content", function(assert) {
 		// check viewport:  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		var $v = jQuery("meta").filter("[name=viewport]");
+		const $v = jQuery("meta").filter("[name=viewport]");
 		assert.equal($v.length, 1, "There should be a viewport meta tag");
 		if (Device.os.ios) {
 			assert.equal($v.attr("content"), "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", "The viewport meta tag content should be correct");
@@ -63,8 +62,8 @@ sap.ui.define([
 	/**
 	 * @deprecated Since version 1.20.0
 	 */
-	QUnit.test("orientationChange event", function(assert) {
-		var landscape;
+	QUnit.test("orientationChange event fires with correct landscape parameter", function(assert) {
+		let landscape;
 
 		function onOrientationChange(evt) {
 			landscape = evt.getParameter("landscape");
@@ -76,21 +75,21 @@ sap.ui.define([
 		app._handleOrientationChange();
 		assert.ok(landscape !== undefined, "handler for orientationChange should have been called");
 
-		var isLandscape = jQuery(window).width() > jQuery(window).height();
+		const isLandscape = jQuery(window).width() > jQuery(window).height();
 		assert.equal(landscape, isLandscape, "'landscape' parameter should contain the current orientation");
 
 		app.detachOrientationChange(onOrientationChange);
 	});
 
-	QUnit.test("Dimensions", function(assert) {
-		var appDom = document.getElementById("myFirstApp");
-		var ww = document.body.getBoundingClientRect().width;
-		var wh = document.documentElement.getBoundingClientRect().height;
+	QUnit.test("App dimensions fill the entire window", function(assert) {
+		const appDom = document.getElementById("myFirstApp");
+		const ww = document.body.getBoundingClientRect().width;
+		const wh = document.documentElement.getBoundingClientRect().height;
 		assert.equal(appDom.getBoundingClientRect().width, ww, "width should be the complete window width");
 		assert.equal(Math.round(appDom.getBoundingClientRect().height), Math.round(wh), "height should be the complete window height"); // rounding needed for IE11
 		});
 
-	QUnit.test("destroy", function(assert) {
+	QUnit.test("App and all pages are removed from DOM and control tree on destroy", function(assert) {
 		app.destroy();
 		assert.equal(document.getElementById("page1"), undefined, "Page 1 should not exist anymore in the DOM");
 		assert.ok(Element.getElementById("page1") === undefined, "Page 1 should not exist anymore as control");
@@ -102,10 +101,10 @@ sap.ui.define([
 
 
 	QUnit.module("backgroundColor", {
-		beforeEach: function () {
+		beforeEach: async function () {
 			this.oApp = new App();
 			this.oApp.placeAt("qunit-fixture");
-			Core.applyChanges();
+			await nextUIUpdate();
 		},
 		afterEach: function () {
 			this.oApp.destroy();
@@ -113,14 +112,14 @@ sap.ui.define([
 		}
 	});
 
-	QUnit.test("only valid color is set to DOM element", function(assert) {
-		var oApp = this.oApp;
+	QUnit.test("only valid color is set to DOM element", async function(assert) {
+		const oApp = this.oApp;
 
 		oApp.setBackgroundColor("blue;5px solid red;");
 
 		// Act
 		oApp.invalidate();
-		Core.applyChanges();
+		await nextUIUpdate();
 
 		// Check
 		assert.strictEqual(getBgDomElement(oApp).style.backgroundColor, '', "correct property value");
@@ -128,10 +127,10 @@ sap.ui.define([
 
 
 	QUnit.module("backgroundImage", {
-		beforeEach: function () {
+		beforeEach: async function () {
 			this.oApp = new App();
 			this.oApp.placeAt("qunit-fixture");
-			Core.applyChanges();
+			await nextUIUpdate();
 		},
 		afterEach: function () {
 			this.oApp.destroy();
@@ -139,18 +138,17 @@ sap.ui.define([
 		}
 	});
 
-	QUnit.test("style is set to DOM element", function(assert) {
+	QUnit.test("background image style is applied to the DOM element", async function(assert) {
 		// Arrange
-		var oApp = this.oApp,
-			sExpectedOutputImagePath = 'url("' + (sBackroungImageSrc) + '")',
-			$oAppImageHolder;
+		const oApp = this.oApp;
+		const sExpectedOutputImagePath = 'url("' + (sBackroungImageSrc) + '")';
 
 		// Act
 		oApp.setBackgroundImage(sBackroungImageSrc);
-		Core.applyChanges();
+		await nextUIUpdate();
 
 		// Arrange
-		$oAppImageHolder = oApp.$().find('.sapUiGlobalBackgroundImage').get(0);
+		const $oAppImageHolder = oApp.$().find('.sapUiGlobalBackgroundImage').get(0);
 
 		// Assert
 		assert.strictEqual($oAppImageHolder.style.backgroundImage, sExpectedOutputImagePath,
@@ -158,46 +156,44 @@ sap.ui.define([
 	});
 
 
-	QUnit.test("url value with special characters", function(assert) {
+	QUnit.test("background image URL with special characters is rendered correctly", async function(assert) {
 		// Arrange
-		var oApp = this.oApp,
-			sPath = "test-resources/sap/m/images/",
-			sUnreservedChars = "img100-._~",
-			sReservedChars1 = encodeURIComponent("#[]@"), // skipped  :/?  because of OS restriction
-			sReservedChars2 = encodeURIComponent("!$&'()+,;="),
-			sOtherChars = encodeURIComponent(" çéд"),
-			sReservedCharsUnencoded = "$",
-			sFileExtension = ".png",
-			sQuery = "?q1=1&q2=2",
-			sImgSrc = sPath + sUnreservedChars + sReservedChars1 + sReservedChars2 + sOtherChars + sReservedCharsUnencoded + sFileExtension + sQuery,
-			$oAppImageHolder,
-			sExpectedOutputImagePath = 'url("' + (sImgSrc) + '")';
+		const oApp = this.oApp;
+		const sPath = "test-resources/sap/m/images/";
+		const sUnreservedChars = "img100-._~";
+		const sReservedChars1 = encodeURIComponent("#[]@"); // skipped  :/?  because of OS restriction
+		const sReservedChars2 = encodeURIComponent("!$&'()+,;=");
+		const sOtherChars = encodeURIComponent(" çéд");
+		const sReservedCharsUnencoded = "$";
+		const sFileExtension = ".png";
+		const sQuery = "?q1=1&q2=2";
+		const sImgSrc = sPath + sUnreservedChars + sReservedChars1 + sReservedChars2 + sOtherChars + sReservedCharsUnencoded + sFileExtension + sQuery;
+		const sExpectedOutputImagePath = 'url("' + (sImgSrc) + '")';
 
 		// Act
 		oApp.setBackgroundImage(sImgSrc);
-		Core.applyChanges();
+		await nextUIUpdate();
 
 		// Arrange
-		$oAppImageHolder = oApp.$().find('.sapUiGlobalBackgroundImage').get(0);
+		const $oAppImageHolder = oApp.$().find('.sapUiGlobalBackgroundImage').get(0);
 
 		// Assert
 		assert.strictEqual($oAppImageHolder.style.backgroundImage, sExpectedOutputImagePath,
 				"background-image URL is correct.");
 	});
 
-	QUnit.test("url value with base64 encoding", function(assert) {
+	QUnit.test("background image with base64 encoded data URI is rendered correctly", async function(assert) {
 		// Arrange
-		var oApp = this.oApp,
-			sImgSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==",
-			$oAppImageHolder,
-			sExpectedOutputImagePath = 'url("' + sImgSrc + '")';
+		const oApp = this.oApp;
+		const sImgSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
+		const sExpectedOutputImagePath = 'url("' + sImgSrc + '")';
 
 		// Act
 		oApp.setBackgroundImage(sImgSrc);
-		Core.applyChanges();
+		await nextUIUpdate();
 
 		// Arrange
-		$oAppImageHolder = oApp.$().find('.sapUiGlobalBackgroundImage').get(0);
+		const $oAppImageHolder = oApp.$().find('.sapUiGlobalBackgroundImage').get(0);
 
 		// Assert
 		assert.strictEqual($oAppImageHolder.style.backgroundImage, sExpectedOutputImagePath,
@@ -205,45 +201,43 @@ sap.ui.define([
 	});
 
 
-	QUnit.test("encodes css-specific chars in backgroundImage value", function(assert) {
+	QUnit.test("CSS-specific characters in backgroundImage value are encoded to prevent style injection", async function(assert) {
 		// Arrange
-		var sImageSrc = sBackroungImageSrc + ");border:5px solid red;",
-			oApp = this.oApp,
-			oAppDom = getBgDomElement(oApp),
-			sBorderBeforeTest = oAppDom.style.border;
+		const sImageSrc = sBackroungImageSrc + ");border:5px solid red;";
+		const oApp = this.oApp;
+		const oAppDom = getBgDomElement(oApp);
+		const sBorderBeforeTest = oAppDom.style.border;
 
 		// Act
 		oApp.setBackgroundImage(sImageSrc);
-		Core.applyChanges();
+		await nextUIUpdate();
 
 		// Check
-		oAppDom = getBgDomElement(oApp);
-		assert.strictEqual(oAppDom.style.border, sBorderBeforeTest, "preserved border style value");
+		assert.strictEqual(getBgDomElement(oApp).style.border, sBorderBeforeTest, "preserved border style value");
 	});
 
 
-	QUnit.test("encodes html-specific chars in backgroundImage style", function(assert) {
+	QUnit.test("HTML-specific characters in backgroundImage value are encoded to prevent handler injection", async function(assert) {
 		// Arrange
-		var sImageSrc = sBackroungImageSrc + ')"; onmouseover="console.log"',
-			oApp = this.oApp,
-			oAppDom = getBgDomElement(oApp),
-			oHandlerBeforeTest = oAppDom.onmouseover;
+		const sImageSrc = sBackroungImageSrc + ')"; onmouseover="console.log"';
+		const oApp = this.oApp;
+		const oAppDom = getBgDomElement(oApp);
+		const oHandlerBeforeTest = oAppDom.onmouseover;
 
 		// Act
 		oApp.setBackgroundImage(sImageSrc);
-		Core.applyChanges();
+		await nextUIUpdate();
 
 		// Check
-		oAppDom = getBgDomElement(oApp);
-		assert.strictEqual(oAppDom.onmouseover, oHandlerBeforeTest, "preserved handler value");
+		assert.strictEqual(getBgDomElement(oApp).onmouseover, oHandlerBeforeTest, "preserved handler value");
 	});
 
 	QUnit.module("Parent traversing", {
-		beforeEach: function () {
+		beforeEach: async function () {
 			this.oApp = new App();
 			this.oSpy = this.spy(this.oApp, "_adjustParentsHeight");
 			this.oApp.placeAt("qunit-fixture");
-			Core.applyChanges();
+			await nextUIUpdate();
 		},
 		afterEach: function () {
 			this.oApp.destroy();
@@ -251,22 +245,22 @@ sap.ui.define([
 		}
 	});
 
-	QUnit.test("isTopLevel property", function(assert) {
+	QUnit.test("isTopLevel property controls whether parent height adjustment is performed", async function(assert) {
 		assert.strictEqual(this.oSpy.called, true, "Parents are traversed when isTopLevel value is true");
 
 		this.oSpy.resetHistory();
 
 		this.oApp.setIsTopLevel(false);
-		Core.applyChanges();
+		await nextUIUpdate();
 
 		assert.strictEqual(this.oSpy.notCalled, true, "Parents are not traversed when isTopLevel value is false");
 	});
 
 	QUnit.module("Invisible App", {
-		beforeEach: function () {
+		beforeEach: async function () {
 			this.oApp = new App({ visible: false });
 			this.oApp.placeAt("qunit-fixture");
-			Core.applyChanges();
+			await nextUIUpdate();
 		},
 		afterEach: function () {
 			this.oApp.destroy();

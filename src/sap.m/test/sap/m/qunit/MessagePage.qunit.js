@@ -9,6 +9,7 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/ui/core/library",
 	"sap/ui/core/Core",
+	"sap/ui/qunit/utils/nextUIUpdate",
 	"sap/ui/thirdparty/jquery"
 ], function(
 	Library,
@@ -19,22 +20,23 @@ sap.ui.define([
 	Link,
 	Button,
 	coreLibrary,
-	oCore,
+	Core,
+	nextUIUpdate,
 	jQuery
 ) {
 	"use strict";
 
 	// shortcut for sap.ui.core.TextDirection
-	var TextDirection = coreLibrary.TextDirection;
+	const TextDirection = coreLibrary.TextDirection;
 
 	// shortcut for sap.ui.core.TitleLevel
-	var TitleLevel = coreLibrary.TitleLevel;
+	const TitleLevel = coreLibrary.TitleLevel;
 
 	createAndAppendDiv("content").style.height = "100%";
 
 
 
-	var messagePageId = "testMessagePage";
+	const messagePageId = "testMessagePage";
 
 	function createMessagePage() {
 		return new MessagePage(messagePageId,{
@@ -65,7 +67,7 @@ sap.ui.define([
 		beforeEach: function() {
 			this.oMessagePage = createMessagePage();
 			this.oMessagePage.placeAt('content');
-			oCore.applyChanges();
+			Core.applyChanges();
 		},
 		afterEach: function() {
 			this.oMessagePage.destroy();
@@ -75,7 +77,7 @@ sap.ui.define([
 
 	QUnit.test("The control should be rendered", function(assert) {
 		// Arrange
-		var $oMessagePage = jQuery(".sapMMessagePage").length;
+		const $oMessagePage = jQuery(".sapMMessagePage").length;
 
 		// Assert
 		assert.ok($oMessagePage, "MessagePage is rendered.");
@@ -95,7 +97,7 @@ sap.ui.define([
 		beforeEach: function() {
 			this.oMessagePage = createMessagePageWithAggregations();
 			this.oMessagePage.placeAt('content');
-			oCore.applyChanges();
+			Core.applyChanges();
 		},
 		afterEach: function() {
 			this.oMessagePage.destroy();
@@ -105,9 +107,9 @@ sap.ui.define([
 
 	QUnit.test("The aggregations are rendered", function(assert) {
 		// Arrange
-		var $customText = this.oMessagePage.$().find(".sapMMessagePageMainText"),
-			$customDescription = this.oMessagePage.$().find(".sapMMessagePageDescription"),
-			$buttonsWrapper = this.oMessagePage.$().find(".sapMMessagePageButtonsWrapper");
+		const $customText = this.oMessagePage.$().find(".sapMMessagePageMainText");
+		const $customDescription = this.oMessagePage.$().find(".sapMMessagePageDescription");
+		const $buttonsWrapper = this.oMessagePage.$().find(".sapMMessagePageButtonsWrapper");
 
 		// Assert
 		assert.strictEqual($customText.length, 1, "MessagePage customText is rendered");
@@ -120,7 +122,7 @@ sap.ui.define([
 
 	QUnit.test("Title is rendered only if set", function(assert) {
 		// Arrange
-		var $title = this.oMessagePage.$("title");
+		let $title = this.oMessagePage.$("title");
 
 		// Assert init state
 		assert.strictEqual(this.oMessagePage.getTitle(), "", "MessagePage is initialized with no title");
@@ -130,7 +132,7 @@ sap.ui.define([
 
 		// Act
 		this.oMessagePage.setTitle("Some string");
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		$title = this.oMessagePage.$("title");
 
@@ -147,7 +149,7 @@ sap.ui.define([
 
 		// Act
 		this.oMessagePage.setTitleLevel(TitleLevel.H4);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		// Assert
 		assert.strictEqual(this.oMessagePage._getTitle().getLevel(), TitleLevel.H4, "MessagePage titleLevel is correctly set to the title instance");
@@ -157,7 +159,7 @@ sap.ui.define([
 		beforeEach: function() {
 			this.oMessagePage = createMessagePage();
 			this.oMessagePage.placeAt('content');
-			oCore.applyChanges();
+			Core.applyChanges();
 		},
 		afterEach: function() {
 			this.oMessagePage.destroy();
@@ -167,63 +169,57 @@ sap.ui.define([
 
 	QUnit.test("The control setTitle should render the correct value", function(assert) {
 		// Arrange
-		var sExpectedValue = "Not default title",
-			sActualValue;
+		const sExpectedValue = "Not default title";
 
 		// Act
 		this.oMessagePage.setTitle(sExpectedValue);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		// Assert
-		sActualValue =  jQuery("#" + messagePageId + " .sapMTitle").text();
+		const sActualValue = jQuery("#" + messagePageId + " .sapMTitle").text();
 		assert.equal(sActualValue, sExpectedValue, "The title is correct");
 	});
 
 	QUnit.test("The control setText should set new value", function(assert) {
 		// Arrange
-		var sExpectedValue = "Not default text",
-			sActualValue;
+		const sExpectedValue = "Not default text";
 
 		// Act
 		this.oMessagePage.setText(sExpectedValue);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		// Assert
-		sActualValue =  jQuery(".sapMMessagePageMainText").text();
+		const sActualValue = jQuery(".sapMMessagePageMainText").text();
 		assert.equal(sActualValue, sExpectedValue, "The text is correct");
 	});
 
 	QUnit.test("The control setDescription should return new value", function(assert) {
 		// Arrange
-		var sExpectedValue = "Not default text",
-			sActualValue;
+		const sExpectedValue = "Not default text";
 
 		// Act
 		this.oMessagePage.setDescription(sExpectedValue);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		// Assert
-		sActualValue =  jQuery(".sapMMessagePageDescription").text();
+		const sActualValue = jQuery(".sapMMessagePageDescription").text();
 
 		assert.equal(sActualValue, sExpectedValue, "The text is correct");
 	});
 
 	QUnit.test("The control setHeader should be without header", function(assert) {
-		// Arrange
-		var iActualResult;
-
 		// System under test
 		this.oMessagePage.setShowHeader(false);
-		oCore.applyChanges();
+		Core.applyChanges();
 
-		iActualResult = jQuery("#" + messagePageId + " .sapMPageHeader").length;
+		const iActualResult = jQuery("#" + messagePageId + " .sapMPageHeader").length;
 		assert.ok(!iActualResult, "The header is not rendered");
 	});
 
 
 	QUnit.test("setIcon with icon URI", function(assert) {
 		// Arrange
-		var sNewIcon = IconPool.getIconURI("message-success");
+		const sNewIcon = IconPool.getIconURI("message-success");
 
 		// Act: runtime change of the current Icon with new one, using standard icon URI.
 		// In this case the MessagePage just updates the existing Icon control src.
@@ -235,50 +231,50 @@ sap.ui.define([
 
 	QUnit.test("setIcon with image URI", function(assert) {
 		// Arrange
-		var sNewImage = "test.png";
+		const sNewImage = "test.png";
 
 		// Act: runtime change of the current Icon with 'Image' (using none-existing URI).
 		// In this case the MessagePage removes and destroys the existing Icon control
 		// and creates new one.
 		this.oMessagePage.setIcon(sNewImage);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		assert.equal(this.oMessagePage.getIcon(), sNewImage, "New Image is set.");
 		assert.equal(this.oMessagePage.getAggregation("_icon").getSrc(), sNewImage, "New Icon is set.");
 	});
 
-	QUnit.test("Set iconAlt", function(assert) {
+	QUnit.test("Set iconAlt property on the inner Icon control", function(assert) {
 		// Assert
 		assert.strictEqual(this.oMessagePage.getAggregation("_icon").getAlt(), "My Documents", "Alt property of the inner Icon image is properly set");
 	});
 
-	QUnit.test("Set textDirection", function(assert) {
+	QUnit.test("Set textDirection updates the DOM direction attribute", function(assert) {
 		// Act
 		this.oMessagePage.setTextDirection(TextDirection.RTL);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		// Assert
 		assert.strictEqual(this.oMessagePage.getDomRef().dir, "rtl", "Text direction is rtl");
 
 		// Act
 		this.oMessagePage.setTextDirection(TextDirection.LTR);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		// Assert
 		assert.strictEqual(this.oMessagePage.getDomRef().dir, "ltr", "Text direction is ltr");
 
 		// Act
 		this.oMessagePage.setTextDirection(TextDirection.Inherit);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		// Assert
 		assert.strictEqual(this.oMessagePage.getDomRef().dir, "", "Text direction is not set explicitly");
 	});
 
-	QUnit.test("Set enableFormattedText", function(assert) {
+	QUnit.test("Set enableFormattedText renders a FormattedText control", function(assert) {
 		// Act
 		this.oMessagePage.setEnableFormattedText(true);
-		oCore.applyChanges();
+		Core.applyChanges();
 
 		// Assert
 		assert.ok(this.oMessagePage.getDomRef("formattedText"), "FormattedText is rendered");
@@ -286,7 +282,7 @@ sap.ui.define([
 
 	QUnit.module("Binding properties", {
 		beforeEach: function() {
-			var oModel = new JSONModel(
+			const oModel = new JSONModel(
 				{
 					title: "Title",
 					text: "text with braces {{}}"
@@ -300,7 +296,7 @@ sap.ui.define([
 			this.oMessagePage.setModel(oModel);
 
 			this.oMessagePage.placeAt('content');
-			oCore.applyChanges();
+			Core.applyChanges();
 		},
 		afterEach: function() {
 			this.oMessagePage.destroy();
@@ -320,7 +316,7 @@ sap.ui.define([
 		beforeEach: function() {
 			this.oMessagePage = createMessagePage();
 			this.oMessagePage.placeAt('content');
-			oCore.applyChanges();
+			Core.applyChanges();
 		},
 		afterEach: function() {
 			this.oMessagePage = null;
@@ -339,7 +335,7 @@ sap.ui.define([
 		beforeEach: function() {
 			this.oMessagePage = createMessagePageWithAggregations();
 			this.oMessagePage.placeAt('content');
-			oCore.applyChanges();
+			Core.applyChanges();
 		},
 		afterEach: function() {
 			this.oMessagePage.destroy();
@@ -352,7 +348,7 @@ sap.ui.define([
 		beforeEach: function() {
 			this.oMessagePage = createMessagePageWithAggregations();
 			this.oMessagePage.placeAt('content');
-			oCore.applyChanges();
+			Core.applyChanges();
 		},
 		afterEach: function() {
 			this.oMessagePage.destroy();
@@ -360,11 +356,11 @@ sap.ui.define([
 		}
 	});
 
-	QUnit.test("ARIA attributes", function(assert) {
+	QUnit.test("ARIA attributes are correctly set on the MessagePage root element", function(assert) {
 		// Arrange
-		var $oMessagePage = this.oMessagePage.$(),
-			sExpectedRoleDescription = Library.getResourceBundleFor("sap.m")
-				.getText(this.oMessagePage.constructor.ARIA_ROLE_DESCRIPTION);
+		const $oMessagePage = this.oMessagePage.$();
+		const sExpectedRoleDescription = Library.getResourceBundleFor("sap.m")
+			.getText(this.oMessagePage.constructor.ARIA_ROLE_DESCRIPTION);
 
 		// Assert
 		assert.strictEqual($oMessagePage.attr('aria-roledescription'), sExpectedRoleDescription, "aria-roledescription is set");

@@ -2,18 +2,18 @@
 
 sap.ui.define([
 	"sap/ui/core/Control",
-	"sap/ui/core/Core",
 	"sap/m/BadgeEnabler",
-	"sap/m/BadgeCustomData"
+	"sap/m/BadgeCustomData",
+	"sap/ui/qunit/utils/nextUIUpdate"
 ], function(
 	Control,
-	Core,
 	BadgeEnabler,
-	BadgeCustomData
+	BadgeCustomData,
+	nextUIUpdate
 ){
 	"use strict";
 
-	var MyCustomControl = Control.extend("sap.custom.MyCustomControl", {
+	const MyCustomControl = Control.extend("sap.custom.MyCustomControl", {
 		metadata: {
 			library: "sap.m",
 			interfaces: "sap.m.IBadge"
@@ -41,11 +41,11 @@ sap.ui.define([
 	};
 
 	QUnit.module("Basic", {
-		beforeEach: function() {
+		beforeEach: async function() {
 			this.oCustomControl = new MyCustomControl({id: "CustomControl"});
 			this.oCustomControl.addCustomData(new BadgeCustomData({value: "10"}));
 			this.oCustomControl.placeAt('qunit-fixture');
-			Core.applyChanges();
+			await nextUIUpdate();
 		},
 		afterEach: function () {
 			this.oCustomControl.destroy();
@@ -53,7 +53,7 @@ sap.ui.define([
 		}
 	});
 
-	QUnit.test("Initialisation", function (assert) {
+	QUnit.test("Badge initialisation sets value, visibility and reacts to data changes", async function (assert) {
 
 		//Assert
 		assert.equal(this.oCustomControl.getCustomData()[0].getValue(), "10", "Value is properly set on BadgeCustomData");
@@ -85,7 +85,7 @@ sap.ui.define([
 		//Act
 		this.oCustomControl.getBadgeCustomData().setValue("10");
 		this.oCustomControl.removeAllCustomData();
-		Core.applyChanges();
+		await nextUIUpdate();
 
 		//Assert
 		assert.equal(this.oCustomControl._isBadgeAttached, false, "Badge Disappears when badgeCustomData is detached");
@@ -102,11 +102,11 @@ sap.ui.define([
 	});
 
 	QUnit.module("API", {
-		beforeEach: function() {
+		beforeEach: async function() {
 			this.oCustomControl = new MyCustomControl({id: "CustomControl"});
 			this.oCustomControl.addCustomData(new BadgeCustomData({value: "10"}));
 			this.oCustomControl.placeAt('qunit-fixture');
-			Core.applyChanges();
+			await nextUIUpdate();
 		},
 		afterEach: function () {
 			this.oCustomControl.destroy();
@@ -115,10 +115,10 @@ sap.ui.define([
 	});
 
 
-	QUnit.test("API", function (assert) {
+	QUnit.test("Badge update handler is called with correct arguments on appear, update, and disappear events", function (assert) {
 
 		//Arrange
-		var oUpdateFuncStub = this.spy(this.oCustomControl, "onBadgeUpdate");
+		const oUpdateFuncStub = this.spy(this.oCustomControl, "onBadgeUpdate");
 
 		//Act
 		this.oCustomControl.addCustomData(new BadgeCustomData({value: "100"}));
@@ -179,7 +179,7 @@ sap.ui.define([
 
 	});
 
-	QUnit.test("null and undefined values", function (assert) {
+	QUnit.test("Badge handles null and undefined values by falling back to empty string", function (assert) {
 
 		//Arrange
 		this.oCustomControl.getBadgeCustomData().setValue(undefined);
@@ -201,11 +201,11 @@ sap.ui.define([
 	});
 
 	QUnit.module("ACC", {
-		beforeEach: function() {
+		beforeEach: async function() {
 			this.oCustomControl = new MyCustomControl({id: "CustomControl"});
 			this.oCustomControl.addCustomData(new BadgeCustomData({value: "10"}));
 			this.oCustomControl.placeAt('qunit-fixture');
-			Core.applyChanges();
+			await nextUIUpdate();
 		},
 		afterEach: function () {
 			this.oCustomControl.destroy();
@@ -213,7 +213,7 @@ sap.ui.define([
 		}
 	});
 
-	QUnit.test("ACC", function(assert) {
+	QUnit.test("Badge indicator aria-label is set correctly using custom text from getAriaLabelBadgeText", function(assert) {
 		assert.equal(this.oCustomControl._oBadgeContainer.find(".sapMBadgeIndicator").attr("aria-label"), "10 items", "Aria-label with custom  text" +
 			" set properly");
 	});
